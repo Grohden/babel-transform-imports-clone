@@ -60,7 +60,7 @@ import * as Bootstrap from 'react-bootstrap';
 ## Installation
 
 ```
-npm install --save-dev babel-plugin-transform-imports
+yarn add git://github.com/ElMassimo/babel-transform-imports.git
 ```
 
 ## Usage
@@ -127,16 +127,20 @@ import Footer from 'my-library/components/App/Footer';
 ### Using a function as the transformer
 
 If you need more advanced or more specific transformation logic, and are using
-Babel 7+ with a `.babelrc.js` file, you may provide a function instead of a
+Babel 7+ with a `.babel.config.js` file, you may provide a function instead of a
 string for the `transform` option:
 
-.babelrc.js:
+.babel.config.js:
 
 ```javascript
 module.exports = {
     presets: ['@babel/env'],
     plugins: [
         ['transform-imports', {
+            'date-fns': {
+                transform: importName => `date-fns/${camelCase(importName)}`,
+                preventFullImport: true,
+            },
             'my-library': {
                 transform: function(importName, matches) {
                     return `my-library/etc/${importName.toUpperCase()}`;
@@ -148,37 +152,8 @@ module.exports = {
 };
 ```
 
-### Using a transformation file
-
-If you need the above flexibility of using a function as a transformer, but
-are still on Babel 6 or cannot use a `.babelrc.js` file for some reason, you
-may provide a path to a .js file which exports a function to run instead.
-Keep in mind that the .js file will be `require`d relative from this plugin's
-path, likely located in `/node_modules/babel-plugin-transform-imports`.  You
-may provide any filename, as long as it ends with `.js`.
-
-.babelrc:
-
-```json
-{
-    "plugins": [
-        ["transform-imports", {
-            "my-library": {
-                "transform": "../../path/to/transform.js",
-                "preventFullImport": true
-            }
-        }]
-    ]
-}
-```
-
-/path/to/transform.js:
-
-```javascript
-module.exports = function(importName, matches) {
-    return 'my-library/etc/' + importName.toUpperCase();
-};
-```
+You may combine a regular expression in the library name with a function
+transform, any captures of the regex will be passed as a second argument (`matches`).
 
 ## Webpack
 
@@ -213,9 +188,6 @@ module: {
 
 | Name | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
-| `transform` | `string or function` | yes | `undefined` | The library name to use instead of the one specified in the import statement.  ${member} will be replaced with the import name, aka Grid/Row/Col/etc., and ${1-n} will be replaced by any matched regular expression groups. Alternatively, pass a path to a .js file which exports a function to process the transform, which is invoked with parameters: (importName, matches). If using Babel 7+, a function may be passed directly. (see Advanced Transformations) |
+| `transform` | `string or function` | yes | `undefined` | The library name to use instead of the one specified in the import statement.  ${member} will be replaced with the import name, aka Grid/Row/Col/etc., and ${1-n} will be replaced by any matched regular expression groups. If using a JS Babel config file, a function may be passed directly. (see Advanced Transformations) |
 | `preventFullImport` | `boolean` | no | `false` | Whether or not to throw when an import is encountered which would cause the entire module to be imported. |
-| `camelCase` | `boolean` | no | `false` | When set to true, runs ${member} through _.camelCase. |
-| `kebabCase` | `boolean` | no | `false` | When set to true, runs ${member} through _.kebabCase. |
-| `snakeCase` | `boolean` | no | `false` | When set to true, runs ${member} through _.snakeCase. |
 | `skipDefaultConversion` | `boolean` | no | `false` | When set to true, will preserve `import { X }` syntax instead of converting to `import X`. |
