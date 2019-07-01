@@ -60,27 +60,27 @@ import * as Bootstrap from 'react-bootstrap';
 ## Installation
 
 ```
-yarn add git://github.com/ElMassimo/babel-transform-imports.git
+npm install --save-dev babel-plugin-transform-imports
 ```
 
 ## Usage
 
-*In .babelrc:*
+*In `.babelrc`:*
 
 ```json
 {
-    "plugins": [
-        ["transform-imports", {
-            "react-bootstrap": {
-                "transform": "react-bootstrap/lib/${member}",
-                "preventFullImport": true
-            },
-            "lodash": {
-                "transform": "lodash/${member}",
-                "preventFullImport": true
-            }
-        }]
-    ]
+  "plugins": [
+    ["transform-imports", {
+      "react-bootstrap": {
+        "transform": "react-bootstrap/lib/${member}",
+        "preventFullImport": true
+      },
+      "lodash": {
+        "transform": "lodash/${member}",
+        "preventFullImport": true
+      }
+    }]
+  ]
 }
 ```
 
@@ -92,18 +92,18 @@ Sometimes, you may wish to use regular expressions in your transformation (for
 example, to enforce the same convention in all folder levels on the structure
 of your library).
 
-.babelrc:
+`.babelrc`:
 
 ```json
 {
-    "plugins": [
-        ["transform-imports", {
-            "my-library\/?(((\\w*)?\/?)*)": {
-                "transform": "my-library/${1}/${member}",
-                "preventFullImport": true
-            }
-        }]
-    ]
+  "plugins": [
+    ["transform-imports", {
+      "my-library\/?(((\\w*)?\/?)*)": {
+        "transform": "my-library/${1}/${member}",
+        "preventFullImport": true
+      }
+    }]
+  ]
 }
 ```
 
@@ -127,28 +127,26 @@ import Footer from 'my-library/components/App/Footer';
 ### Using a function as the transformer
 
 If you need more advanced or more specific transformation logic, and are using
-Babel 7+ with a `.babel.config.js` file, you may provide a function instead of a
+Babel 7+ with a `babel.config.js` file, you may provide a function instead of a
 string for the `transform` option:
 
-.babel.config.js:
+`babel.config.js`:
 
 ```javascript
 module.exports = {
-    presets: ['@babel/env'],
-    plugins: [
-        ['transform-imports', {
-            'date-fns': {
-                transform: importName => `date-fns/${camelCase(importName)}`,
-                preventFullImport: true,
-            },
-            'my-library': {
-                transform: function(importName, matches) {
-                    return `my-library/etc/${importName.toUpperCase()}`;
-                },
-                preventFullImport: true,
-            }
-        }]
-    ]
+  presets: ['@babel/env'],
+  plugins: [
+    ['transform-imports', {
+      'date-fns': {
+        transform: importName => `date-fns/${camelCase(importName)}`,
+        preventFullImport: true,
+      },
+      'my-library': {
+        transform: (importName, matches) => `my-library/etc/${importName.toUpperCase()}`,
+        preventFullImport: true,
+      }
+    }]
+  ]
 };
 ```
 
@@ -162,25 +160,25 @@ This can be used as a plugin with babel-loader.
 webpack.config.js:
 ```javascript
 module: {
-    rules: [{
-        test: /\.js$/,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-            loader: 'babel-loader',
-            query: {
-                plugins: [
-                    [require('babel-plugin-transform-imports'), {
-                        'my-library': {
-                            transform: function(importName, matches) {
-                                return 'my-library/etc/' + importName.toUpperCase();
-                            },
-                            preventFullImport: true
-                        }
-                    }]
-                ]
+  rules: [{
+    test: /\.js$/,
+    exclude: /(node_modules|bower_components)/,
+    use: {
+      loader: 'babel-loader',
+      query: {
+        plugins: [
+          [require('babel-plugin-transform-imports'), {
+            'my-library': {
+              transform: function(importName, matches) {
+                return 'my-library/etc/' + importName.toUpperCase();
+              },
+              preventFullImport: true
             }
-        }
-    }]
+          }]
+        ]
+      }
+    }
+  }]
 }
 ```
 
