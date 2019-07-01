@@ -18,9 +18,6 @@ import merge from 'lodash/merge';
 *Note: this plugin is not restricted to the react-bootstrap and lodash
 libraries.  You may use it with any library.*
 
-*If you are on Babel 6, please use the 1.x version of this library and see the
-documentation located [here](https://bitbucket.org/amctheatres/babel-transform-imports/src/babel6/README.md)*.
-
 ## Why?
 
 When Babel encounters a member style import such as:
@@ -184,6 +181,19 @@ module: {
   }]
 }
 ```
+
+## Version 2.0 Breaking Changes
+
+Version 2.0 of this plugin targets Babel 7. Since Babel 7 allows for JS inside
+the config via `.babelrc.js` or `babel.config.js`, the specialized transforms
+`camelCase`, `kebabCase`, and `snakeCase` have been dropped. If you still need
+this functionality, you can import `lodash` directly in your config file and
+use those functions as part of a return value passed to the `transform` function
+(see *Using a function as the transformer* above).
+
+If you are on Babel 6, this plugin should still work, but if you need the prior
+specialized functionality, please use the ^1.0.0 version of this library and
+see the documentation located [here](https://bitbucket.org/amctheatres/babel-transform-imports/src/babel6/README.md).
 
 ## Options
 
