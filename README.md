@@ -154,8 +154,7 @@ module.exports = {
 ```
 
 You may combine a regular expression in the library name with a function
-transform, and any captures of the regex will be passed as a second argument
-(`matches`).
+transform, and any captures of the regex will be passed as a second argument.
 
 ## Webpack
 
