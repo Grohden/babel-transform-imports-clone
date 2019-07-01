@@ -19,7 +19,7 @@ import merge from 'lodash/merge';
 libraries.  You may use it with any library.*
 
 *If you are on Babel 6, please use the 1.x version of this library and see the
-documentation located [here](https://bitbucket.org/amctheatres/babel-transform-imports/src/babel6/README.md)*
+documentation located [here](https://bitbucket.org/amctheatres/babel-transform-imports/src/babel6/README.md)*.
 
 ## Why?
 
@@ -68,7 +68,7 @@ npm install --save-dev babel-plugin-transform-imports
 
 ## Usage
 
-*In `.babelrc`:*
+`.babelrc`:
 
 ```json
 {
@@ -154,7 +154,8 @@ module.exports = {
 ```
 
 You may combine a regular expression in the library name with a function
-transform, any captures of the regex will be passed as a second argument (`matches`).
+transform, and any captures of the regex will be passed as a second argument
+(`matches`).
 
 ## Webpack
 
