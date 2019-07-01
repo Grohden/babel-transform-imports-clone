@@ -1,9 +1,6 @@
-var types = require('babel-types');
+var types = require('@babel/types');
 var isValidPath = require('is-valid-path');
-var camel = require('lodash.camelcase');
 var findKey = require('lodash.findkey');
-var kebab = require('lodash.kebabcase');
-var snake = require('lodash.snakecase');
 var pathLib = require('path');
 
 function findOptionFromSource(source, state) {
@@ -18,10 +15,8 @@ function findOptionFromSource(source, state) {
     var isRelativePath = source.match(/^\.{0,2}\//);
     // This block handles relative paths, such as ./components, ../../components, etc.
     if (isRelativePath) {
-        var _source = pathLib.resolve(pathLib.join(
-            source[0] === '/' ? '' : pathLib.dirname(state.file.opts.filename),
-            source
-        ));
+        var dirname = source[0] === '/' ? '' : state.file.opts.filename ? pathLib.dirname(state.file.opts.filename) : '.'
+        var _source = pathLib.resolve(pathLib.join(dirname, source));
 
         if (opts[_source]) {
             return _source;
@@ -47,21 +42,8 @@ function barf(msg) {
 }
 
 function transform(transformOption, importName, matches) {
-    var isFunction = typeof transformOption === 'function';
-    if (/\.js$/i.test(transformOption) || isFunction) {
-        var transformFn;
-
-        try {
-            transformFn = isFunction ? transformOption : require(transformOption);
-        } catch (error) {
-            barf('failed to require transform file ' + transformOption);
-        }
-
-        if (typeof transformFn !== 'function') {
-            barf('expected transform function to be exported from ' + transformOption);
-        }
-
-        return transformFn(importName, matches);
+    if (typeof transformOption === 'function') {
+        return transformOption(importName, matches);
     }
 
     return transformOption.replace(/\$\{\s?([\w\d]*)\s?\}/ig, function(str, g1) {
@@ -131,9 +113,6 @@ module.exports = function() {
                         //      import { Grid as gird } from 'react-bootstrap/lib/Grid';
 
                         var importName = memberImport.imported.name;
-                        if (opts.camelCase) importName = camel(importName);
-                        if (opts.kebabCase) importName = kebab(importName);
-                        if (opts.snakeCase) importName = snake(importName);
 
                         var replace = transform(opts.transform, importName, matches);
 
