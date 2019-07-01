@@ -1,14 +1,13 @@
 var types = require('@babel/types');
 var isValidPath = require('is-valid-path');
-var findKey = require('lodash.findkey');
 var pathLib = require('path');
 
 function findOptionFromSource(source, state) {
   var opts = state.opts;
   if (opts[source]) return source;
 
-  var opt = findKey(opts, function (o, _opt) {
-    return !isValidPath(_opt) && new RegExp(_opt).test(source);
+  var opt = Object.keys(opts).find(function (key) {
+    return !isValidPath(key) && new RegExp(key).test(source);
   });
   if (opt) return opt;
 

@@ -22,8 +22,7 @@
   "license": "ISC",
   "dependencies": {
     "@babel/types": "^7.4",
-    "is-valid-path": "^0.1.1",
-    "lodash.findkey": "^4.6.0"
+    "is-valid-path": "^0.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.4",
