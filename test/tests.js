@@ -6,10 +6,11 @@ function createOptions({
   preventFullImport,
   transform = 'react-bootstrap/lib/${member}',
   skipDefaultConversion,
+  importAliases = {},
   libraryName = 'react-bootstrap'
 }) {
   return {
-    [libraryName]: { transform, preventFullImport, skipDefaultConversion }
+    [libraryName]: { transform, preventFullImport, skipDefaultConversion, importAliases }
   };
 };
 
@@ -36,6 +37,19 @@ describe('import transformations', function () {
     assert.equal(code, [
       'import Grid from "react-bootstrap/lib/Grid";',
       'import row from "react-bootstrap/lib/Row";',
+    ].join("\n"))
+  });
+
+  it('should handle renamed imports', function () {
+    const options = createOptions({
+      skipDefaultConversion: true,
+      importAliases: {
+        'Row': 'RowN'
+      }
+    })
+    const code = transform(`import { Row } from 'react-bootstrap';`, options);
+    assert.equal(code, [
+      'import { RowN as Row } from "react-bootstrap/lib/Row";',
     ].join("\n"))
   });
 

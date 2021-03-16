@@ -112,12 +112,22 @@ module.exports = function () {
             //      import { Grid as gird } from 'react-bootstrap/lib/Grid';
 
             var importName = memberImport.imported.name;
+            var localName = memberImport.local.name;
 
             var replace = transform(opts.transform, importName, matches);
 
-            var newImportSpecifier = (opts.skipDefaultConversion)
-              ? memberImport
-              : types.importDefaultSpecifier(types.identifier(memberImport.local.name));
+            var newImportSpecifier = memberImport
+
+            // import aliases:
+            // import { Bar } from 'foo', but should generate import { X as Bar } from 'foo'
+            if(localName === importName && (opts.importAliases || {})[localName]) {
+              newImportSpecifier = types.importSpecifier(
+                  types.identifier(localName),
+                  types.identifier(opts.importAliases[localName])
+              )
+            } else if(!opts.skipDefaultConversion) {
+                newImportSpecifier = types.importDefaultSpecifier(types.identifier(localName))
+            }
 
             transforms.push(types.importDeclaration(
               [newImportSpecifier],

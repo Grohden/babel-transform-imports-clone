@@ -1,3 +1,21 @@
+# Disclaimer:
+
+Almost all of this code belongs to amctheatres and the original sources
+are available [here](https://bitbucket.org/amctheatres/babel-transform-imports/src/master/)
+
+This clone/fork solves a single issue:
+
+Support transforming this:
+
+`import { View } from 'native-base'`
+
+Into this
+
+`import { ViewNB as View } from 'native-base'`
+
+This package is also not published to npm, if you really want to use it, use the reference to this repository tags
+for safety
+
 # babel-plugin-transform-imports
 
 Transforms member style imports:
@@ -199,6 +217,7 @@ see the documentation located [here](https://bitbucket.org/amctheatres/babel-tra
 
 | Name | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
-| `transform` | `string or function` | yes | `undefined` | The library name to use instead of the one specified in the import statement.  ${member} will be replaced with the import name, aka Grid/Row/Col/etc., and ${1-n} will be replaced by any matched regular expression groups. If using a JS Babel config file, a function may be passed directly. (see Advanced Transformations) |
-| `preventFullImport` | `boolean` | no | `false` | Whether or not to throw when an import is encountered which would cause the entire module to be imported. |
-| `skipDefaultConversion` | `boolean` | no | `false` | When set to true, will preserve `import { X }` syntax instead of converting to `import X`. |
+| `transform`               | `string or function`  | yes   | `undefined` | The library name to use instead of the one specified in the import statement.  ${member} will be replaced with the import name, aka Grid/Row/Col/etc., and ${1-n} will be replaced by any matched regular expression groups. If using a JS Babel config file, a function may be passed directly. (see Advanced Transformations) |
+| `preventFullImport`       | `boolean`             | no    | `false`      | Whether or not to throw when an import is encountered which would cause the entire module to be imported. |
+| `skipDefaultConversion`   | `boolean`             | no    | `false`      | When set to true, will preserve `import { X }` syntax instead of converting to `import X`. |
+| `importAliases`           | `object`              | no    | `undefined`  | A map of name -> alias `{ Foo: 'Bar' }` will transform `import { Foo }` into `{ Bar as Foo }` |
