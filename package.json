@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-transform-imports",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Transforms member style imports (import {x} from 'y') into default style imports (import x from 'y/lib/x')",
   "keywords": [
     "babel",
